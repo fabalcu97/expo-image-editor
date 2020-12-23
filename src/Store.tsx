@@ -1,5 +1,5 @@
-import { ExpoWebGLRenderingContext } from "expo-gl";
-import { atom } from "recoil";
+import { ExpoWebGLRenderingContext } from 'expo-gl';
+import { atom } from 'recoil';
 
 interface ImageData {
   uri: string;
@@ -8,7 +8,7 @@ interface ImageData {
 }
 
 export const imageDataState = atom<ImageData>({
-  key: "imageDataState",
+  key: 'imageDataState',
   default: {
     uri: undefined,
     width: 0,
@@ -17,7 +17,7 @@ export const imageDataState = atom<ImageData>({
 });
 
 export const imageScaleFactorState = atom<number>({
-  key: "imageScaleFactorState",
+  key: 'imageScaleFactorState',
   default: 1,
 });
 
@@ -29,7 +29,7 @@ interface ImageBounds {
 }
 
 export const imageBoundsState = atom<ImageBounds>({
-  key: "imageBoundsState",
+  key: 'imageBoundsState',
   default: {
     x: 0,
     y: 0,
@@ -39,12 +39,12 @@ export const imageBoundsState = atom<ImageBounds>({
 });
 
 export const readyState = atom<boolean>({
-  key: "readyState",
+  key: 'readyState',
   default: false,
 });
 
 export const processingState = atom<boolean>({
-  key: "processingState",
+  key: 'processingState',
   default: false,
 });
 
@@ -54,7 +54,7 @@ interface AccumulatedPan {
 }
 
 export const accumulatedPanState = atom<AccumulatedPan>({
-  key: "accumulatedPanState",
+  key: 'accumulatedPanState',
   default: {
     x: 0,
     y: 0,
@@ -67,32 +67,32 @@ interface ImageDimensions {
 }
 
 export const cropSizeState = atom<ImageDimensions>({
-  key: "cropSizeState",
+  key: 'cropSizeState',
   default: {
     width: 0,
     height: 0,
   },
 });
 
-export type EditingModes = "operation-select" | "crop" | "rotate" | "blur";
+export type EditingModes = 'operation-select' | 'crop' | 'rotate' | 'blur';
 
 export const editingModeState = atom<EditingModes>({
-  key: "editingModeState",
-  default: "operation-select",
+  key: 'editingModeState',
+  default: 'crop',
 });
 
 export const fixedCropAspectRatioState = atom<number>({
-  key: "fixedCropAspectRatioState",
+  key: 'fixedCropAspectRatioState',
   default: 1,
 });
 
 export const lockAspectRatioState = atom<boolean>({
-  key: "lockAspectRatioState",
+  key: 'lockAspectRatioState',
   default: false,
 });
 
 export const minimumCropDimensionsState = atom<ImageDimensions>({
-  key: "minimumCropDimensionsState",
+  key: 'minimumCropDimensionsState',
   default: {
     width: 0,
     height: 0,
@@ -105,17 +105,22 @@ interface GLContext {
   verts: Float32Array;
 }
 
-export const glContextState = atom<GLContext["gl"]>({
-  key: "glContextState",
+export const glContextState = atom<GLContext['gl']>({
+  key: 'glContextState',
   default: null,
 });
 
-export const glProgramState = atom<GLContext["program"]>({
-  key: "glProgramState",
+export const glProgramState = atom<GLContext['program']>({
+  key: 'glProgramState',
   default: null,
 });
 
 export const throttleBlurState = atom<boolean>({
-  key: "throttleBlurState",
+  key: 'throttleBlurState',
+  default: false,
+});
+
+export const cropState = atom<boolean>({
+  key: 'cropState',
   default: false,
 });

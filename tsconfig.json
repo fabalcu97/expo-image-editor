@@ -10,9 +10,16 @@
     "sourceMap": true,
     "outDir": "lib",
     "jsx": "react-native",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
   },
-  "lib": ["es2015"],
-  "include": ["src"],
-  "exclude": ["./node_modules/**/*"]
+  "lib": [
+    "es2015"
+  ],
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "./node_modules/**/*"
+  ]
 }

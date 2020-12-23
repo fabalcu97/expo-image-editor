@@ -1,15 +1,7 @@
-import * as React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  Image,
-  Alert,
-  Platform,
-} from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { ImageEditor, Mode } from "./lib/ImageEditor";
+import * as React from 'react';
+import { StyleSheet, View, Button, Image, Alert } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { ImageEditor, Mode } from './lib/ImageEditor';
 
 export default function App() {
   //
@@ -17,7 +9,7 @@ export default function App() {
   const [editorVisible, setEditorVisible] = React.useState(false);
 
   const [croppedUri, setCroppedUri] = React.useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   const [aspectLock, setAspectLock] = React.useState(false);
@@ -35,7 +27,7 @@ export default function App() {
     } else {
       // If not then alert the user they need to enable it
       Alert.alert(
-        "Please enable camera roll permissions for this app in your settings."
+        'Please enable camera roll permissions for this app in your settings.',
       );
     }
   };
@@ -51,13 +43,13 @@ export default function App() {
     <View style={styles.container}>
       <Image style={styles.image} source={{ uri: imageUri }} />
       <Image
-        style={[styles.image, { backgroundColor: "#333" }]}
+        style={[styles.image, { backgroundColor: '#333' }]}
         source={{ uri: croppedUri }}
       />
       <View style={styles.buttonRow}>
-        <Button title="Select Photo" onPress={() => selectPhoto()} />
+        <Button title='Select Photo' onPress={() => selectPhoto()} />
         <Button
-          title={"Aspect Lock: " + aspectLock}
+          title={'Aspect Lock: ' + aspectLock}
           onPress={() => setAspectLock(!aspectLock)}
         />
       </View>
@@ -83,22 +75,22 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
-    width: "90%",
+    width: '90%',
     height: 250,
-    resizeMode: "contain",
-    backgroundColor: "#ccc",
-    marginBottom: "5%",
+    resizeMode: 'contain',
+    backgroundColor: '#ccc',
+    marginBottom: '5%',
   },
   buttonRow: {
-    width: "100%",
+    width: '100%',
     height: 150,
-    flexDirection: "column",
-    justifyContent: "space-around",
-    alignItems: "center",
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
 });

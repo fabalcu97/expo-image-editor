@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   Modal as RNModal,
   StyleSheet,
@@ -9,13 +9,13 @@ import {
   Image,
   Dimensions,
   SafeAreaView,
-} from "react-native";
-import { ControlBar } from "./ControlBar";
-import { EditingWindow } from "./EditingWindow";
-import * as ImageManipulator from "expo-image-manipulator";
-import { Processing } from "./Processing";
-import Modal from "modal-react-native-web";
-import { useRecoilState, RecoilRoot } from "recoil";
+} from 'react-native';
+import { ControlBar } from './ControlBar';
+import { EditingWindow } from './EditingWindow';
+import * as ImageManipulator from 'expo-image-manipulator';
+import { Processing } from './Processing';
+import Modal from 'modal-react-native-web';
+import { useRecoilState, RecoilRoot } from 'recoil';
 import {
   imageBoundsState,
   accumulatedPanState,
@@ -29,12 +29,13 @@ import {
   lockAspectRatioState,
   minimumCropDimensionsState,
   throttleBlurState,
-} from "./Store";
-import { Asset } from "expo-asset";
-import { OperationBar } from "./OperationBar/OperationBar";
-const noScroll = require("no-scroll");
+  cropState,
+} from './Store';
+import { Asset } from 'expo-asset';
+import { OperationBar } from './OperationBar/OperationBar';
+const noScroll = require('no-scroll');
 
-export type Mode = "full" | "crop-only" | "rotate-only";
+export type Mode = 'full' | 'crop-only' | 'rotate-only';
 
 export interface ImageEditorProps {
   visible: boolean;
@@ -54,7 +55,7 @@ function ImageEditorCore(props: ImageEditorProps) {
   const [imageBounds, setImageBounds] = useRecoilState(imageBoundsState);
   const [imageData, setImageData] = useRecoilState(imageDataState);
   const [accumulatedPan, setAccumulatedPan] = useRecoilState(
-    accumulatedPanState
+    accumulatedPanState,
   );
   const [imageScaleFactor] = useRecoilState(imageScaleFactorState);
   const [cropSize, setCropSize] = useRecoilState(cropSizeState);
@@ -64,9 +65,10 @@ function ImageEditorCore(props: ImageEditorProps) {
   const [, setFixedCropAspectRatio] = useRecoilState(fixedCropAspectRatioState);
   const [, setLockAspectRatio] = useRecoilState(lockAspectRatioState);
   const [, setMinimumCropDimensions] = useRecoilState(
-    minimumCropDimensionsState
+    minimumCropDimensionsState,
   );
   const [, setThrottleBlur] = useRecoilState(throttleBlurState);
+  const [cropped, setCropped] = useRecoilState(cropState);
 
   // Initialise the image data when it is set through the props
   React.useEffect(() => {
@@ -78,8 +80,8 @@ function ImageEditorCore(props: ImageEditorProps) {
           noScroll.on();
         };
         // Platform check
-        if (Platform.OS == "web") {
-          var img = document.createElement("img");
+        if (Platform.OS == 'web') {
+          var img = document.createElement('img');
           img.onload = () => {
             setImageData({
               uri: props.imageUri,
@@ -122,12 +124,14 @@ function ImageEditorCore(props: ImageEditorProps) {
   const onFinishEditing = async () => {
     setProcessing(false);
     props.onEditingComplete(imageData);
+    setCropped(false);
     onCloseEditor();
   };
 
   const onCloseEditor = () => {
     // Set no-scroll to off
     noScroll.off();
+    setCropped(false);
     props.onCloseEditor();
   };
 
@@ -144,25 +148,21 @@ function ImageEditorCore(props: ImageEditorProps) {
       <StatusBar hidden />
       <SafeAreaView
         style={{
-          height: "100%",
-          width: "100%",
-          position: "absolute",
+          height: '100%',
+          width: '100%',
+          position: 'absolute',
           top: 0,
           left: 0,
           zIndex: 1000000,
           elevation: 1000000,
           opacity: props.visible ? 1.0 : 0.0,
         }}
-        pointerEvents={props.visible ? "auto" : "none"}
-      >
+        pointerEvents={props.visible ? 'auto' : 'none'}>
         {ready ? (
           <View style={styles.container}>
             <ControlBar
-              onPressBack={() =>
-                editingMode == "operation-select"
-                  ? props.onCloseEditor()
-                  : setEditingMode("operation-select")
-              }
+              hasCropped={cropped}
+              onPressBack={() => props.onCloseEditor()}
               onFinishEditing={() => onFinishEditing()}
             />
             <EditingWindow />
@@ -186,6 +186,6 @@ export function ImageEditor(props: ImageEditorProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#222",
+    backgroundColor: '#222',
   },
 });

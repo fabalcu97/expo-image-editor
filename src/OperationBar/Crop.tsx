@@ -1,17 +1,18 @@
-import * as React from "react";
-import { StyleSheet, View, Text, Platform, Alert } from "react-native";
-import { useRecoilState } from "recoil";
-import { IconButton } from "../components/IconButton";
+import * as React from 'react';
+import { StyleSheet, View, Text, Platform, Alert } from 'react-native';
+import { useRecoilState } from 'recoil';
+import { IconButton } from '../components/IconButton';
 import {
   accumulatedPanState,
   cropSizeState,
+  cropState,
   editingModeState,
   imageBoundsState,
   imageDataState,
   imageScaleFactorState,
   processingState,
-} from "../Store";
-import * as ImageManipulator from "expo-image-manipulator";
+} from '../Store';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 export function Crop() {
   const [accumulatedPan] = useRecoilState(accumulatedPanState);
@@ -21,15 +22,16 @@ export function Crop() {
   const [, setProcessing] = useRecoilState(processingState);
   const [imageData, setImageData] = useRecoilState(imageDataState);
   const [, setEditingMode] = useRecoilState(editingModeState);
+  const [, setCropState] = useRecoilState(cropState);
 
   const onPerformCrop = async () => {
     // Calculate cropping bounds
     const croppingBounds = {
       originX: Math.round(
-        (accumulatedPan.x - imageBounds.x) * imageScaleFactor
+        (accumulatedPan.x - imageBounds.x) * imageScaleFactor,
       ),
       originY: Math.round(
-        (accumulatedPan.y - imageBounds.y) * imageScaleFactor
+        (accumulatedPan.y - imageBounds.y) * imageScaleFactor,
       ),
       width: Math.round(cropSize.width * imageScaleFactor),
       height: Math.round(cropSize.height * imageScaleFactor),
@@ -42,10 +44,10 @@ export function Crop() {
     // Check if on web - currently there is a weird bug where it will keep
     // the canvas from ImageManipualtor at originX + width and so we'll just crop
     // the result again for now if on web - TODO write github issue!
-    if (Platform.OS == "web") {
+    if (Platform.OS == 'web') {
       const webCorrection = await ImageManipulator.manipulateAsync(
         cropResult.uri,
-        [{ crop: { ...croppingBounds, originX: 0, originY: 0 } }]
+        [{ crop: { ...croppingBounds, originX: 0, originY: 0 } }],
       );
       const { uri, width, height } = webCorrection;
       setImageData({ uri, width, height });
@@ -54,25 +56,21 @@ export function Crop() {
       setImageData({ uri, width, height });
     }
     setProcessing(false);
-    setEditingMode("operation-select");
+    setCropState(true);
+    setEditingMode('crop');
   };
 
   return (
     <View style={styles.container}>
-      <IconButton
-        iconID="close"
-        text="Cancel"
-        onPress={() => setEditingMode("operation-select")}
-      />
       <Text style={styles.prompt}>Adjust window to crop</Text>
       <IconButton
-        iconID="check"
-        text="Done"
+        iconID='crop'
+        text='Crop'
         onPress={() =>
           onPerformCrop().catch(() => {
             // If there's an error dismiss the the editor and alert the user
             setProcessing(false);
-            Alert.alert("An error occurred while editing.");
+            Alert.alert('An error occurred while editing.');
           })
         }
       />
@@ -83,14 +81,14 @@ export function Crop() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: "2%",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: '2%',
   },
   prompt: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 21,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });
