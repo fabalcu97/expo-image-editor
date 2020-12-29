@@ -1,7 +1,7 @@
-import * as React from "react";
-import { Animated, StyleSheet, View, TouchableOpacity } from "react-native";
-import _ from "lodash";
-import { useRecoilState } from "recoil";
+import * as React from 'react';
+import { Animated, StyleSheet, View, TouchableOpacity } from 'react-native';
+import _ from 'lodash';
+import { useRecoilState } from 'recoil';
 import {
   cropSizeState,
   imageBoundsState,
@@ -9,26 +9,26 @@ import {
   fixedCropAspectRatioState,
   lockAspectRatioState,
   minimumCropDimensionsState,
-} from "./Store";
+} from './Store';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
   State,
-} from "react-native-gesture-handler";
+} from 'react-native-gesture-handler';
 
-const horizontalSections = ["top", "middle", "bottom"];
-const verticalSections = ["left", "middle", "right"];
+const horizontalSections = ['top', 'middle', 'bottom'];
+const verticalSections = ['left', 'middle', 'right'];
 
 function ImageCropOverlay() {
   // Record which section of the fram window has been pressed
   // this determines whether it is a translation or scaling gesture
-  const [selectedFrameSection, setSelectedFrameSection] = React.useState("");
+  const [selectedFrameSection, setSelectedFrameSection] = React.useState('');
 
   // Shared state and bits passed through recoil to avoid prop drilling
   const [cropSize, setCropSize] = useRecoilState(cropSizeState);
   const [imageBounds] = useRecoilState(imageBoundsState);
   const [accumulatedPan, setAccumluatedPan] = useRecoilState(
-    accumulatedPanState
+    accumulatedPanState,
   );
   const [fixedAspectRatio] = useRecoilState(fixedCropAspectRatioState);
   const [lockAspectRatio] = useRecoilState(lockAspectRatioState);
@@ -80,20 +80,20 @@ function ImageCropOverlay() {
   // pressed
   const isMovingSection = () => {
     return (
-      selectedFrameSection == "topmiddle" ||
-      selectedFrameSection == "middleleft" ||
-      selectedFrameSection == "middleright" ||
-      selectedFrameSection == "middlemiddle" ||
-      selectedFrameSection == "bottommiddle"
+      selectedFrameSection == 'topmiddle' ||
+      selectedFrameSection == 'middleleft' ||
+      selectedFrameSection == 'middleright' ||
+      selectedFrameSection == 'middlemiddle' ||
+      selectedFrameSection == 'bottommiddle'
     );
   };
 
   // Check what resizing / translation needs to be performed based on which section was pressed
-  const isLeft = selectedFrameSection.endsWith("left");
-  const isTop = selectedFrameSection.startsWith("top");
+  const isLeft = selectedFrameSection.endsWith('left');
+  const isTop = selectedFrameSection.startsWith('top');
 
   const onOverlayMove = ({ nativeEvent }: PanGestureHandlerGestureEvent) => {
-    if (selectedFrameSection !== "") {
+    if (selectedFrameSection !== '') {
       // Check if the section pressed is one to translate the crop window or not
       if (isMovingSection()) {
         // If it is then use an animated event to directly pass the tranlation
@@ -105,43 +105,43 @@ function ImageCropOverlay() {
               translationY: panY.current,
             },
           ],
-          { useNativeDriver: false }
+          { useNativeDriver: false },
         )(nativeEvent);
       } else {
-        // Else its a scaling operation
-        const { x, y } = getTargetCropFrameBounds(nativeEvent);
-        if (isTop) {
-          panY.current.setValue(-y);
-        }
-        if (isLeft) {
-          panX.current.setValue(-x);
-        }
-        // Finally update the animated width to the values the crop
-        // window has been resized to
-        animatedCropSize.width.setValue(cropSize.width + x);
-        animatedCropSize.height.setValue(cropSize.height + y);
+        // // Else its a scaling operation
+        // const { x, y } = getTargetCropFrameBounds(nativeEvent);
+        // if (isTop) {
+        //   panY.current.setValue(-y);
+        // }
+        // if (isLeft) {
+        //   panX.current.setValue(-x);
+        // }
+        // // Finally update the animated width to the values the crop
+        // // window has been resized to
+        // animatedCropSize.width.setValue(cropSize.width + x);
+        // animatedCropSize.height.setValue(cropSize.height + y);
       }
     } else {
       // We need to set which section has been pressed
-      const { x, y } = nativeEvent;
-      const { width: initialWidth, height: initialHeight } = cropSize;
-      let position = "";
+      // const { x, y } = nativeEvent;
+      // const { width: initialWidth, height: initialHeight } = cropSize;
+      let position = 'middlemiddle';
       // Figure out where we pressed vertically
-      if (y / initialHeight < 0.333) {
-        position = position + "top";
-      } else if (y / initialHeight < 0.667) {
-        position = position + "middle";
-      } else {
-        position = position + "bottom";
-      }
-      // Figure out where we pressed horizontally
-      if (x / initialWidth < 0.333) {
-        position = position + "left";
-      } else if (x / initialWidth < 0.667) {
-        position = position + "middle";
-      } else {
-        position = position + "right";
-      }
+      // if (y / initialHeight < 0.333) {
+      //   position = position + 'top';
+      // } else if (y / initialHeight < 0.667) {
+      //   position = position + 'middle';
+      // } else {
+      //   position = position + 'bottom';
+      // }
+      // // Figure out where we pressed horizontally
+      // if (x / initialWidth < 0.333) {
+      //   position = position + 'left';
+      // } else if (x / initialWidth < 0.667) {
+      //   position = position + 'middle';
+      // } else {
+      //   position = position + 'right';
+      // }
       setSelectedFrameSection(position);
     }
   };
@@ -149,7 +149,7 @@ function ImageCropOverlay() {
   const getTargetCropFrameBounds = ({
     translationX,
     translationY,
-  }: Partial<PanGestureHandlerGestureEvent["nativeEvent"]>) => {
+  }: Partial<PanGestureHandlerGestureEvent['nativeEvent']>) => {
     let x = 0;
     let y = 0;
     if (translationX < translationY) {
@@ -171,7 +171,7 @@ function ImageCropOverlay() {
   };
 
   const onOverlayRelease = (
-    nativeEvent: PanGestureHandlerGestureEvent["nativeEvent"]
+    nativeEvent: PanGestureHandlerGestureEvent['nativeEvent'],
   ) => {
     // Check if the section pressed is one to translate the crop window or not
     if (isMovingSection()) {
@@ -182,7 +182,7 @@ function ImageCropOverlay() {
       checkResizeBounds(nativeEvent);
     }
     // Disable the pan responder so the section tiles can register being pressed again
-    setSelectedFrameSection("");
+    setSelectedFrameSection('');
   };
 
   const onHandlerStateChange = ({
@@ -199,7 +199,7 @@ function ImageCropOverlay() {
     translationX,
     translationY,
   }:
-    | PanGestureHandlerGestureEvent["nativeEvent"]
+    | PanGestureHandlerGestureEvent['nativeEvent']
     | { translationX: number; translationY: number }) => {
     // Check if the pan in the x direction exceeds the bounds
     let accDx = accumulatedPan.x + translationX;
@@ -241,7 +241,7 @@ function ImageCropOverlay() {
     translationX,
     translationY,
   }:
-    | PanGestureHandlerGestureEvent["nativeEvent"]
+    | PanGestureHandlerGestureEvent['nativeEvent']
     | { translationX: number; translationY: number }) => {
     // Check we haven't gone out of bounds when resizing - allow it to be
     // resized up to the appropriate bounds if so
@@ -287,8 +287,7 @@ function ImageCropOverlay() {
     <View style={styles.container}>
       <PanGestureHandler
         onGestureEvent={onOverlayMove}
-        onHandlerStateChange={(e) => onHandlerStateChange(e)}
-      >
+        onHandlerStateChange={(e) => onHandlerStateChange(e)}>
         <Animated.View
           style={[
             styles.overlay,
@@ -299,31 +298,30 @@ function ImageCropOverlay() {
                 { translateY: Animated.add(panY.current, accumulatedPan.y) },
               ],
             },
-          ]}
-        >
+          ]}>
           {
             // For reendering out each section of the crop overlay frame
             horizontalSections.map((hsection) => {
               return (
                 <View style={styles.sectionRow} key={hsection}>
-                  {verticalSections.map((vsection) => {
+                  {/* {verticalSections.map((vsection) => {
                     const key = hsection + vsection;
                     return (
                       <View style={[styles.defaultSection]} key={key}>
                         {
                           // Add the corner markers to the topleft,
                           // topright, bottomleft and bottomright corners to indicate resizing
-                          key == "topleft" ||
-                          key == "topright" ||
-                          key == "bottomleft" ||
-                          key == "bottomright" ? (
+                          key == 'topleft' ||
+                          key == 'topright' ||
+                          key == 'bottomleft' ||
+                          key == 'bottomright' ? (
                             <View
                               style={[
                                 styles.cornerMarker,
-                                hsection == "top"
+                                hsection == 'top'
                                   ? { top: -4, borderTopWidth: 7 }
                                   : { bottom: -4, borderBottomWidth: 7 },
-                                vsection == "left"
+                                vsection == 'left'
                                   ? { left: -4, borderLeftWidth: 7 }
                                   : { right: -4, borderRightWidth: 7 },
                               ]}
@@ -332,7 +330,7 @@ function ImageCropOverlay() {
                         }
                       </View>
                     );
-                  })}
+                  })} */}
                 </View>
               );
             })
@@ -347,31 +345,31 @@ export { ImageCropOverlay };
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
-    width: "100%",
-    position: "absolute",
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
   },
   overlay: {
     height: 40,
     width: 40,
-    backgroundColor: "#33333355",
-    borderColor: "#ffffff88",
+    backgroundColor: '#33333355',
+    borderColor: '#ffffff88',
     borderWidth: 1,
   },
   sectionRow: {
-    flexDirection: "row",
+    flexDirection: 'row',
     flex: 1,
   },
   defaultSection: {
     flex: 1,
     borderWidth: 0.5,
-    borderColor: "#ffffff88",
-    justifyContent: "center",
-    alignItems: "center",
+    borderColor: '#ffffff88',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cornerMarker: {
-    position: "absolute",
-    borderColor: "#ffffff",
+    position: 'absolute',
+    borderColor: '#ffffff',
     height: 30,
     width: 30,
   },
