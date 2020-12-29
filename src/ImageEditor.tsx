@@ -147,7 +147,7 @@ function ImageEditorCore(props: ImageEditorProps) {
 
   return (
     <>
-      <StatusBar {...this.props.statusBarProps} />
+      <StatusBar {...props.statusBarProps} />
       <SafeAreaView
         style={{
           height: '100%',
