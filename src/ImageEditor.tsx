@@ -9,6 +9,7 @@ import {
   Image,
   Dimensions,
   SafeAreaView,
+  StatusBarProps,
 } from 'react-native';
 import { ControlBar } from './ControlBar';
 import { EditingWindow } from './EditingWindow';
@@ -49,6 +50,7 @@ export interface ImageEditorProps {
   onEditingComplete: (result: any) => void;
   lockAspectRatio: boolean;
   throttleBlur?: boolean;
+  statusBarProps?: StatusBarProps;
 }
 
 function ImageEditorCore(props: ImageEditorProps) {
@@ -145,7 +147,7 @@ function ImageEditorCore(props: ImageEditorProps) {
 
   return (
     <>
-      <StatusBar hidden />
+      <StatusBar {...this.props.statusBarProps} />
       <SafeAreaView
         style={{
           height: '100%',

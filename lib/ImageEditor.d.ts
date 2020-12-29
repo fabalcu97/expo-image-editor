@@ -1,4 +1,5 @@
 /// <reference types="react" />
+import { StatusBarProps } from 'react-native';
 export declare type Mode = 'full' | 'crop-only' | 'rotate-only';
 export interface ImageEditorProps {
     visible: boolean;
@@ -12,6 +13,7 @@ export interface ImageEditorProps {
     onEditingComplete: (result: any) => void;
     lockAspectRatio: boolean;
     throttleBlur?: boolean;
+    statusBarProps?: StatusBarProps;
 }
 export declare function ImageEditor(props: ImageEditorProps): JSX.Element;
 //# sourceMappingURL=ImageEditor.d.ts.map
