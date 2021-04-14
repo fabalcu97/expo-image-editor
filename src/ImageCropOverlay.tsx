@@ -30,10 +30,9 @@ function ImageCropOverlay() {
   const [imageBounds] = useRecoilState(imageBoundsState);
   const panX = React.useRef(new Animated.Value(imageBounds.x));
   const panY = React.useRef(new Animated.Value(imageBounds.y));
-  const [accumulatedPan, setAccumluatedPan] = React.useState<{
-    x: number;
-    y: number;
-  }>({ x: 0, y: 0 });
+  const [accumulatedPan, setAccumulatedPan] = useRecoilState(
+    accumulatedPanState,
+  );
   const [fixedAspectRatio] = useRecoilState(fixedCropAspectRatioState);
 
   const [animatedCropSize] = React.useState({
@@ -44,10 +43,10 @@ function ImageCropOverlay() {
   React.useEffect(() => {
     // Move the pan to the origin and check the bounds so it clicks to
     // the corner of the image
-    // checkCropBounds({
-    //   translationX: 0,
-    //   translationY: 0,
-    // });
+    checkCropBounds({
+      translationX: 0,
+      translationY: 0,
+    });
     // When the crop size updates make sure the animated value does too!
     animatedCropSize.height.setValue(cropSize.height);
     animatedCropSize.width.setValue(cropSize.width);
@@ -70,12 +69,12 @@ function ImageCropOverlay() {
     }
     // Set the size of the crop overlay
     setCropSize(newSize);
-    setAccumluatedPan({
+    setAccumulatedPan({
       x: 0,
-      y: imageBounds.height / 2 - newSize.height / 2,
+      y: imageBounds.height / 2 - newSize.height / 2 + imageBounds.y,
     });
     return () => {
-      setAccumluatedPan({
+      setAccumulatedPan({
         x: 0,
         y: 0,
       });
@@ -160,7 +159,6 @@ function ImageCropOverlay() {
     }
     // Check if the pan in the y direction exceeds the bounds
     let accDy = accumulatedPan.y + translationY;
-    console.log({ accumulatedPanY: accumulatedPan.y, translationY });
     // Is the new y pos less the top edge?
     if (accDy <= imageBounds.y) {
       // Then set it to be zero and set the pan to zero too
@@ -175,7 +173,7 @@ function ImageCropOverlay() {
     // Record the accumulated pan and reset the pan refs to zero
     panX.current.setValue(0);
     panY.current.setValue(0);
-    setAccumluatedPan({ x: accDx, y: accDy });
+    setAccumulatedPan({ x: accDx, y: accDy });
   };
 
   return (
