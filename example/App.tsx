@@ -57,7 +57,7 @@ export default function App() {
         visible={editorVisible}
         onCloseEditor={() => setEditorVisible(false)}
         imageUri={imageUri}
-        fixedCropAspectRatio={1}
+        fixedCropAspectRatio={2.273}
         lockAspectRatio={aspectLock}
         minimumCropDimensions={{
           width: 100,
